@@ -62,7 +62,7 @@ log(){
 firstdown(){
 	[ $1 = 1 ] && A=$BIN_DIR/checknetwork && B=check
 	[ $1 = 2 ] && A=$BIN_DIR/update && B=--First
-	service_start ${A} ${B}
+	start-stop-daemon -S -b -x ${A} -- ${B}
 }
 
 f_bin(){
@@ -190,7 +190,8 @@ start_dns(){
 		;;
 	esac
 	if [ $run_mode = router ];then
-		service_start $(which chinadns-ng) -l 5337 -c '127.0.0.1#5336' -t '127.0.0.1#5335' -4 china_v4 -6 china_v6 -f -n $([ $gfw_mode = 1 ] && echo -g $K/gfw.list)
+		DNS_ARGS="-l 5337 -c 127.0.0.1#5336 -t 127.0.0.1#5335 -4 china_v4 -6 china_v6 -f -n $([ $gfw_mode = 1 ] && echo -g $K/gfw.list)"
+		start-stop-daemon -S -b -x $(which chinadns-ng) -- $DNS_ARGS
 		log "ChinaDNS : Start ChinaDNS-NG successful!"
 	fi
 	if [[ "$(uci -q get dhcp.@dnsmasq[0].cachesize)" == "0" ]]; then

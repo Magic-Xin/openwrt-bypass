@@ -8,10 +8,10 @@
 
 name: Repo Dispatcher
 
-on: 
-  # push: 
-  #   branches:
-  #     - master
+on:
+  push:
+    branches:
+      - master
   watch:
     types: started
 
